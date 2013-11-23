@@ -48,7 +48,7 @@ public abstract class AbstractSqlAbtractDAO<T> extends AbtractDAO<T> {
 
 
 	@Override
-	public void delete(T obj){
+	public void remove(T obj){
 		connect.query(SqlLiteHelper.getReqDeleteDataInTable(tableDataBase, ((DataObject) obj).getId()));
 	}
 

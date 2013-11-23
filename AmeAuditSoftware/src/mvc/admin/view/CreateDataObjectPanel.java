@@ -15,7 +15,6 @@ import mvc.admin.view.common.UtilBuildViewAdmin;
 
 import org.apache.log4j.Logger;
 
-import dao.service.ServiceDAO;
 import data.DataObject;
 import data.DataObjectTypeEnum;
 
@@ -58,8 +57,9 @@ public class CreateDataObjectPanel extends JPanel implements ActionListener {
 
 	private void creatObj() {
 		DataObject dataObjectCreate = this.utilPanelAdmin.getDataObjectFromMap();
-		ServiceDAO.getInstance().addObjetData(dataObjectCreate);
-		controllerAdminMVC.reloadTree(dataObjectCreate, true);
+		controllerAdminMVC.addObjetData(dataObjectCreate);
 	}
+	
+	
 
 }

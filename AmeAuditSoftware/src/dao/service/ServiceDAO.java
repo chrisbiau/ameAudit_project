@@ -114,6 +114,35 @@ public class ServiceDAO {
 	}
 
 	
+	/** REMOVE **/
+	public void removeObjetData(DataObject dataObject) {
+		if(dataObject instanceof Answer){
+			allDAOController.getAnswerControllerDao().remove((Answer) dataObject);
+		}else if(dataObject instanceof Audit){
+			allDAOController.getAuditControllerDao().remove((Audit) dataObject);
+		}else if(dataObject instanceof Color){
+			allDAOController.getColorControllerDao().remove((Color) dataObject);
+		}else if(dataObject instanceof Creche){
+			allDAOController.getCrecheControllerDao().remove((Creche) dataObject);
+		}else if(dataObject instanceof Grid){
+			allDAOController.getGridControllerDao().remove((Grid) dataObject);
+		}else if(dataObject instanceof InputDialog){
+			allDAOController.getInputDialogControllerDao().remove((InputDialog) dataObject);
+		}else if(dataObject instanceof NumericRules){
+			allDAOController.getNumericRulesControllerDao().remove((NumericRules) dataObject);
+		}else if(dataObject instanceof Query){
+			allDAOController.getQueryControllerDao().remove((Query) dataObject);
+		}else if(dataObject instanceof Room){
+			allDAOController.getRoomControllerDao().remove((Room) dataObject);
+		}else if(dataObject instanceof Topic){
+			allDAOController.getTopicControllerDao().remove((Topic) dataObject);
+		} else{
+			logger.warn("Any conditions is define for updating this DataObject: "+dataObject.getClass());
+		}
+	}
+
+	
+	
 	/** FIND **/
 	public Room findRoomObjectByValueOrCreate(Room roomSearch) {
 		return allDAOController.getRoomControllerDao().findObjectOrCreateInDAO(roomSearch);
@@ -242,6 +271,7 @@ public class ServiceDAO {
 				
 		return listAnswersByQuery;
 	}
+
 
 
 

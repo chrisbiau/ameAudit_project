@@ -58,10 +58,10 @@ public class  DaoController<T> extends AbtractDAO<T>{
 	}
 
 	@Override
-	public void delete(T obj) {
+	public void remove(T obj) {
 		int id = ((DataObject) obj).getId();
 		logger.debug("Deleting object with id:"+id+" in dataBaseDAO: "+dataBaseDAO.toString());
-		dataBaseDAO.delete(obj);
+		dataBaseDAO.remove(obj);
 	}
 
 

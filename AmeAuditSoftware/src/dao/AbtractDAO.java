@@ -32,7 +32,7 @@ public abstract class AbtractDAO<T> {
 	 * Permet la suppression d'une entree de la base
 	 * @param obj
 	 */
-	public abstract void delete(T obj);
+	public abstract void remove(T obj);
 
 	/**
 	 * Permet de recuperer tous ID

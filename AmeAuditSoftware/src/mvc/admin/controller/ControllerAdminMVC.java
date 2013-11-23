@@ -2,8 +2,8 @@ package mvc.admin.controller;
 
 import java.awt.Component;
 
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -22,11 +22,12 @@ import mvc.manager.view.ApplicationView;
 
 import org.apache.log4j.Logger;
 
+import dao.service.ServiceDAO;
 import data.DataObject;
 
 public class ControllerAdminMVC   {
 
-	private JTree treeList ;
+	private BddComponentTree treeList ;
 
 	private static Logger logger = Logger.getLogger(ControllerAdminMVC.class);
 
@@ -41,7 +42,7 @@ public class ControllerAdminMVC   {
 	private   NodeDetailJscrollPane optionPanel;
 
 
-	
+
 	public ControllerAdminMVC(ManagerMVC managerMVC, ModelAdminMVC modelFormMVC) {
 		managerMVC.getModelManager().getAdminMode().addListener(new adminModeListener());
 		this.managerMVC = managerMVC;
@@ -84,40 +85,74 @@ public class ControllerAdminMVC   {
 		};
 		sw.execute(); 
 	}
-	
-	
-	public void reloadTree(DataObject dataObject, boolean isNewObject){
-		logger.debug("Update Tree model of Jtree Admin");
-		MyDefaultTreeModel model = (MyDefaultTreeModel)treeList.getModel();
-		TreePath path = treeList.getSelectionPath();
-		DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) (path.getLastPathComponent());
-		if(isNewObject){
-		    DefaultMutableTreeNode childNode =  new DefaultMutableTreeNode(dataObject);
-		    model.insertNodeInto(childNode, parentNode, parentNode.getChildCount());
-		    model.reload();
-		    path =  new TreePath(childNode.getPath());
-		}
-		
-		//TODO: CHANGER LE MODEL si c'est une réponse qui change de question 
-		model.reload();
-		treeList.scrollPathToVisible(path);
-		treeList.setSelectionPath(path);
-		
-
-	}
 
 	private class adminModeListener implements DataListenerInterface {
 
 		@Override
 		public void dataChange(Object ojbUpdated) {
-			
+
 			if(ojbUpdated != null && ojbUpdated instanceof Boolean)
-			if((Boolean) ojbUpdated){
-				buildForm();
-			}else{
-				applicationView.removeCenterPanel(adminPanel);
-			}
+				if((Boolean) ojbUpdated){
+					buildForm();
+				}else{
+					applicationView.removeCenterPanel(adminPanel);
+				}
 		}
+	}
+
+	public void addObjetData(DataObject dataObjectCreate) {
+		//Create new object in SQL base
+		ServiceDAO.getInstance().addObjetData(dataObjectCreate);
+
+		//Update tree model
+		MyDefaultTreeModel model = (MyDefaultTreeModel)treeList.getModel();
+		DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) (treeList.getSelectionPath().getLastPathComponent());
+		DefaultMutableTreeNode childNode =  new DefaultMutableTreeNode(dataObjectCreate);
+		model.insertNodeInto(childNode, parentNode, parentNode.getChildCount());
+		model.reload();
+
+		TreePath path = new TreePath(childNode.getPath());
+		treeList.scrollPathToVisible(path);
+		treeList.setSelectionPath(path);
+
+	}
+
+	public void updateObjetData(DataObject dataObject) {
+		//update object in SQL base
+		ServiceDAO.getInstance().updateObjetData(dataObject);
+
+		//Update tree model
+		MyDefaultTreeModel model = (MyDefaultTreeModel)treeList.getModel();
+		TreePath path = treeList.getSelectionPath();
+		model.reload();
+		treeList.scrollPathToVisible(path);
+		treeList.setSelectionPath(path);
+	}
+
+
+	public void removeObjetData(DataObject dataObjectRemove) {
+		int resultat=JOptionPane.showConfirmDialog(
+				managerMVC.getApplicationView(),
+				"Êtes-vous sûr de vouloir supprimer définitivement\n"
+						+ "["+dataObjectRemove.getId()+"] "
+						+ dataObjectRemove,
+						"Êtes-vous sûr de vouloir supprimer définitivement: "+ dataObjectRemove,
+						JOptionPane.YES_NO_OPTION);
+
+		if ( resultat == JOptionPane.YES_OPTION) {
+			//Remove bject in SQL base
+			ServiceDAO.getInstance().removeObjetData(dataObjectRemove);
+
+			MyDefaultTreeModel model = (MyDefaultTreeModel)treeList.getModel();
+			TreePath path = treeList.getSelectionPath();
+
+			DefaultMutableTreeNode mNode = treeList.searchNode(dataObjectRemove);
+			model.removeNodeFromParent(mNode);
+
+			treeList.setSelectionPath(path.getParentPath());
+			treeList.scrollPathToVisible(path);
+		}
+
 	}
 
 

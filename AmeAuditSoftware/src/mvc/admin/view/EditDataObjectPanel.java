@@ -13,7 +13,6 @@ import mvc.admin.view.common.UtilBuildViewAdmin;
 
 import org.apache.log4j.Logger;
 
-import dao.service.ServiceDAO;
 import data.DataObject;
 import data.DataObjectTypeEnum;
 import data.Query;
@@ -24,7 +23,8 @@ public class EditDataObjectPanel extends JPanel implements ActionListener {
 	
 	private DataObject dataObject;
 	private JButton btnSave;
-	private JButton btnAddNew;
+	private JButton btnAddNewAnswer;
+	private JButton btnRemove;
 	private final ControllerAdminMVC controllerAdminMVC;
 	private UtilBuildViewAdmin utilPanelAdmin;
 	
@@ -44,10 +44,15 @@ public class EditDataObjectPanel extends JPanel implements ActionListener {
 			btnSave = new JButton("Enregistrer");
 			btnSave.addActionListener(this);
 			btnPanel.add(btnSave);
+
+			btnRemove = new JButton("Supprimer");
+			btnRemove.addActionListener(this);
+			btnPanel.add(btnRemove);
+			
 			if(dataObject instanceof Query){
-				btnAddNew = new JButton("Ajouter une "+ DataObjectTypeEnum.ANSWER);
-				btnAddNew.addActionListener(this);
-				btnPanel.add(btnAddNew);
+				btnAddNewAnswer = new JButton("Ajouter une "+ DataObjectTypeEnum.ANSWER);
+				btnAddNewAnswer.addActionListener(this);
+				btnPanel.add(btnAddNewAnswer);
 			}
 			this.add(btnPanel, BorderLayout.SOUTH);
 		}
@@ -56,17 +61,15 @@ public class EditDataObjectPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnSave){
-			updateObj();
-		}else if(e.getSource() == btnAddNew){
+			dataObject = this.utilPanelAdmin.getDataObjectFromMap();
+			controllerAdminMVC.updateObjetData(dataObject);
+		}else if(e.getSource() == btnAddNewAnswer){
 		//TODO:
 			logger.warn("TODO: TRAITER CAS NEW ANSWER");
+		}else if(e.getSource() ==  btnRemove){
+			controllerAdminMVC.removeObjetData(dataObject);
 		}
 	}
 
-	private void updateObj() {
-		dataObject = this.utilPanelAdmin.getDataObjectFromMap();
-		ServiceDAO.getInstance().updateObjetData(dataObject);
-		controllerAdminMVC.reloadTree(dataObject,false);
-	}
 
 }

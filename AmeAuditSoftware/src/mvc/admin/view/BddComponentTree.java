@@ -2,6 +2,7 @@ package mvc.admin.view;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -62,8 +63,26 @@ public class BddComponentTree extends JTree {
 				}
 				root.add(rootQuery);
 		}
-
 		return root;
 	}
+
+	
+	public DefaultMutableTreeNode searchNode(DataObject nodeObj) {
+	    DefaultMutableTreeNode node = null;
+	    
+	    DefaultMutableTreeNode m_rootNode = (DefaultMutableTreeNode) this.getModel().getRoot();
+	    Enumeration e = m_rootNode.breadthFirstEnumeration();
+	    while (e.hasMoreElements()) {
+	    	node = (DefaultMutableTreeNode) e.nextElement();
+	    	if (node.getUserObject() instanceof DataObject &&
+	    			nodeObj.getClass() == node.getUserObject().getClass() &&
+	    			nodeObj.getId() == ((DataObject) node.getUserObject()).getId()) {
+	    		return node;
+	    	}
+	    }
+	    return null;
+	}
+
+
 
 }
