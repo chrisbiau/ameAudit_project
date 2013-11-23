@@ -155,5 +155,8 @@ public class ControllerAdminMVC   {
 
 	}
 
-
+	
+	public TreePath getSelectionPathOfTree(){
+		return treeList.getSelectionPath();
+	}
 }
