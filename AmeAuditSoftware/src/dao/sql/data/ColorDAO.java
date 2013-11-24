@@ -4,15 +4,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
 import properties.PropertiesLoader;
 import dao.controller.AllControllerDAO;
 import dao.util.SqlLiteHelper;
+import data.Answer;
 import data.Color;
+import data.DataObject;
 
-public class ColorDAO extends AbstractSqlAbtractDAO<Color> {
+public class ColorDAO<K> extends AbstractSqlAbtractDAO<Color> {
 
 	private static Logger logger = Logger.getLogger(ColorDAO.class);
 
@@ -41,8 +44,8 @@ public class ColorDAO extends AbstractSqlAbtractDAO<Color> {
 	public Color find(int id) {
 		Color obj = null;
 		ArrayList<EColumnName> columnName=  super.getListColumnName(EColomnNameTable.values());
-		ResultSet rs = connect.query(SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id));
-
+		String queryStr = SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id);
+		ResultSet rs = connect.query(queryStr);
 		if(rs != null){
 			try {
 				obj = new Color(rs.getInt(EDefaultColomnName.ID.toString()),
@@ -50,7 +53,7 @@ public class ColorDAO extends AbstractSqlAbtractDAO<Color> {
 						rs.getString(EColomnNameTable.COLOR_VALUE.toString()),
 						rs.getBoolean(EDefaultColomnName.SHOW_ITEM.toString()));
 			} catch (SQLException e) {
-				logger.error("Error Get ID of object: "+e);
+				logger.error("Error Get ID of object when excuting ["+queryStr+"]: "+e);
 			}
 		}else{
 			logger.error("No object ID: "+id+" fond in DB");
@@ -82,6 +85,17 @@ public class ColorDAO extends AbstractSqlAbtractDAO<Color> {
 			valuesMap.put(EColomnNameTable.COLOR_VALUE, obj.getColorValue().toString());
 		}
 		return valuesMap;
+	}
+
+
+	@Override
+	public DataObject getObjetUseByAnotherDataObject(Color obj) {
+		for( Entry<Integer, Answer> entry :  allControllerDAO.getAnswerControllerDao().getAllDataBase().entrySet()){
+			if(entry.getValue().getColor().getId() == obj.getId()){
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 
 

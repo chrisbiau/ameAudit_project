@@ -4,12 +4,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
 import properties.PropertiesLoader;
 import dao.controller.AllControllerDAO;
 import dao.util.SqlLiteHelper;
+import data.Answer;
+import data.DataObject;
 import data.Query;
 
 public class QueryDAO extends AbstractSqlAbtractDAO<Query> {
@@ -48,7 +51,8 @@ public class QueryDAO extends AbstractSqlAbtractDAO<Query> {
 	public Query find(int id) {
 		Query obj = null;
 		ArrayList<EColumnName> columnName=  super.getListColumnName(EQueryColomnNameTable.values());
-		ResultSet rs = connect.query(SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id));
+		String queryStr = SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id);
+		ResultSet rs = connect.query(queryStr);
 
 		if(rs != null){
 			try {
@@ -83,7 +87,7 @@ public class QueryDAO extends AbstractSqlAbtractDAO<Query> {
 				obj.setInputDialog(allControllerDAO.getInputDialogControllerDao().find(idDialog));
 				
 			} catch (SQLException e) {
-				logger.error("Error Get ID of object: "+e);
+				logger.error("Error Get ID of object when excuting ["+queryStr+"]: "+e);
 			}
 		}else{
 			logger.error("No object ID: "+id+" fond in DB");
@@ -117,6 +121,17 @@ public class QueryDAO extends AbstractSqlAbtractDAO<Query> {
 		valuesMap.put(EQueryColomnNameTable.ID_LINK, -1);
 		valuesMap.put(EQueryColomnNameTable.WEIGHTING, obj.getWeigthing());
 		return valuesMap;
+	}
+
+
+	@Override
+	public DataObject getObjetUseByAnotherDataObject(Query obj) {
+		for( Entry<Integer, Answer> entry :  allControllerDAO.getAnswerControllerDao().getAllDataBase().entrySet()){
+			if(entry.getValue().getQuery().getId() == obj.getId()){
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 	
 }

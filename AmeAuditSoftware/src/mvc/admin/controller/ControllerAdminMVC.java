@@ -133,14 +133,14 @@ public class ControllerAdminMVC   {
 			//Remove in model
 			DefaultMutableTreeNode mNode = treeList.searchNode(dataObject);
 			model.removeNodeFromParent(mNode);
-			
+
 			//Add in model
 			DefaultMutableTreeNode parentNode = treeList.searchNode(((Answer) dataObject).getQuery());
 			DefaultMutableTreeNode childNode =  new DefaultMutableTreeNode(dataObject);
 			model.insertNodeInto(childNode, parentNode, parentNode.getChildCount());
 			path = new TreePath(treeList.searchNode(dataObject).getPath());
 		}
-		
+
 
 		model.reload();
 		treeList.scrollPathToVisible(path);
@@ -149,31 +149,43 @@ public class ControllerAdminMVC   {
 
 
 	public void removeObjetData(DataObject dataObjectRemove) {
-		int resultat=JOptionPane.showConfirmDialog(
-				managerMVC.getApplicationView(),
-				"Êtes-vous sûr de vouloir supprimer définitivement\n"
-						+ "["+dataObjectRemove.getId()+"] "
-						+ dataObjectRemove,
-						"Êtes-vous sûr de vouloir supprimer définitivement: "+ dataObjectRemove,
-						JOptionPane.YES_NO_OPTION);
+		DataObject testUseByAnother = ServiceDAO.getInstance().isUseByAnotherDataObject(dataObjectRemove);
+		if(	testUseByAnother != null){
+			JOptionPane.showMessageDialog(
+					managerMVC.getApplicationView(),
+					"Impossible de supprimer cet objet :\n>"
+							+ dataObjectRemove.getType()+" : ["+dataObjectRemove.getId()+"] "
+							+ dataObjectRemove+"\ncar il est utilisé par cet objet :\n>" 
+							+ testUseByAnother.getType()+" :["+testUseByAnother.getId()+"] "
+							+ testUseByAnother+".",
+							"Impossible de supprimer cet objet: "+ dataObjectRemove,
+							JOptionPane.ERROR_MESSAGE);
+		}else{
+			int resultat=JOptionPane.showConfirmDialog(
+					managerMVC.getApplicationView(),
+					"Êtes-vous sûr de vouloir supprimer définitivement\n"
+							+ "["+dataObjectRemove.getId()+"] "
+							+ dataObjectRemove,
+							"Êtes-vous sûr de vouloir supprimer définitivement: "+ dataObjectRemove,
+							JOptionPane.YES_NO_OPTION);
 
-		if ( resultat == JOptionPane.YES_OPTION) {
-			//Remove bject in SQL base
-			ServiceDAO.getInstance().removeObjetData(dataObjectRemove);
+			if ( resultat == JOptionPane.YES_OPTION) {
+				//Remove bject in SQL base
+				ServiceDAO.getInstance().removeObjetData(dataObjectRemove);
 
-			MyDefaultTreeModel model = (MyDefaultTreeModel)treeList.getModel();
-			TreePath path = treeList.getSelectionPath();
+				MyDefaultTreeModel model = (MyDefaultTreeModel)treeList.getModel();
+				TreePath path = treeList.getSelectionPath();
 
-			DefaultMutableTreeNode mNode = treeList.searchNode(dataObjectRemove);
-			model.removeNodeFromParent(mNode);
+				DefaultMutableTreeNode mNode = treeList.searchNode(dataObjectRemove);
+				model.removeNodeFromParent(mNode);
 
-			treeList.setSelectionPath(path.getParentPath());
-			treeList.scrollPathToVisible(path);
+				treeList.setSelectionPath(path.getParentPath());
+				treeList.scrollPathToVisible(path);
+			}
 		}
-
 	}
 
-	
+
 	public TreePath getSelectionPathOfTree(){
 		return treeList.getSelectionPath();
 	}

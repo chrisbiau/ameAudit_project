@@ -11,6 +11,7 @@ import properties.PropertiesLoader;
 import dao.controller.AllControllerDAO;
 import dao.util.SqlLiteHelper;
 import data.Answer;
+import data.DataObject;
 
 public class AnswerDAO extends AbstractSqlAbtractDAO<Answer> {
 
@@ -46,7 +47,8 @@ public class AnswerDAO extends AbstractSqlAbtractDAO<Answer> {
 	public Answer find(int id) {
 		Answer obj = null;
 		ArrayList<EColumnName> columnName=  super.getListColumnName(EAnswerColomnNameTable.values());
-		ResultSet rs = connect.query(SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id));
+		String queryStr = SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id);
+		ResultSet rs = connect.query(queryStr);
 
 		if(rs != null){
 			try {
@@ -69,7 +71,7 @@ public class AnswerDAO extends AbstractSqlAbtractDAO<Answer> {
 				obj.setQuery(allControllerDAO.getQueryControllerDao().find(idQuery));
 				obj.setColor(allControllerDAO.getColorControllerDao().find(idColor));
 			} catch (SQLException e) {
-				logger.error("Error Get ID of object: "+e);
+				logger.error("Error Get ID of object when excuting ["+queryStr+"]: "+e);
 			}
 		}else{
 			logger.error("No object ID: "+id+" fond in DB");
@@ -102,6 +104,13 @@ public class AnswerDAO extends AbstractSqlAbtractDAO<Answer> {
 		valuesMap.put(EAnswerColomnNameTable.UNIT, obj.getUnit());
 		valuesMap.put(EAnswerColomnNameTable.DEFAULT_VALUE, obj.getDefaut());
 		return valuesMap;
+	}
+
+	@Override
+	public DataObject getObjetUseByAnotherDataObject(Answer obj) {
+		DataObject getObj = null;
+		getObj = allControllerDAO.getQueryControllerDao().find(obj.getQuery().getId());
+		return getObj;
 	}
 
 

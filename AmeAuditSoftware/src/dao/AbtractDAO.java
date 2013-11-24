@@ -3,6 +3,8 @@ package dao;
 import java.util.ArrayList;
 import java.util.Map;
 
+import data.DataObject;
+
 
 //http://cyrille-herby.developpez.com/tutoriels/java/mapper-sa-base-donnees-avec-pattern-dao/
 
@@ -48,6 +50,11 @@ public abstract class AbtractDAO<T> {
 	 * Permet de recuperer tous les objets avec leur ID
 	 */
 	public abstract Map<Integer, T>  getAllDataBase();
+	
+	/**
+	 * Permet de savoir si un objet est utiliser par un autre
+	 */
+	public abstract DataObject getObjetUseByAnotherDataObject(T obj);
 
 }
 

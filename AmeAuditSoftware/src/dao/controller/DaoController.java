@@ -16,7 +16,7 @@ import data.DataObject;
 
 public class  DaoController<T> extends AbtractDAO<T>{
 
-	
+
 
 
 	private final DataObservable<Integer> maxProgressBar = new DataObservable<Integer>();
@@ -32,9 +32,9 @@ public class  DaoController<T> extends AbtractDAO<T>{
 
 	@Override
 	public T find(int id) {
-		T obj;
-			logger.debug("Find object with id:"+id+" in dataBaseDAO: "+dataBaseDAO.toString());
-			obj = dataBaseDAO.find(id);		
+		T obj = null;
+		logger.debug("Find object with id:"+id+" in dataBaseDAO: "+dataBaseDAO.toString());
+		obj = dataBaseDAO.find(id);		
 		return obj;
 	}
 
@@ -109,12 +109,17 @@ public class  DaoController<T> extends AbtractDAO<T>{
 	}
 
 
-	public DataObservable<Integer> getMaxProgressBar() {
-		return maxProgressBar;
-	}
 
-	public DataObservable<Integer> getValueProgressBar() {
-		return valueProgressBar;
+
+	@Override
+	public DataObject getObjetUseByAnotherDataObject(T obj) {
+		DataObject value = dataBaseDAO.getObjetUseByAnotherDataObject(obj);	
+		if(value != null){
+			logger.debug("This object : "+obj+" is use by another dataobject in "+dataBaseDAO);
+		}else{
+			logger.debug("This object : "+obj+" is not use by another dataobject in "+dataBaseDAO);
+		}
+		return value;
 	}
 
 

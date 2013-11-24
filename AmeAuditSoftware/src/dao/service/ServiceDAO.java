@@ -51,6 +51,40 @@ public class ServiceDAO {
 	
 
 	
+	
+	/** ADD  **/
+
+	public DataObject isUseByAnotherDataObject(DataObject dataObject) {
+		DataObject value = null;
+		if(dataObject instanceof Answer){
+			value = allDAOController.getAnswerControllerDao().getObjetUseByAnotherDataObject((Answer) dataObject);
+		}else if(dataObject instanceof Audit){
+			value = allDAOController.getAuditControllerDao().getObjetUseByAnotherDataObject((Audit) dataObject);
+		}else if(dataObject instanceof Color){
+			value = allDAOController.getColorControllerDao().getObjetUseByAnotherDataObject((Color) dataObject);
+		}else if(dataObject instanceof Creche){
+			value = allDAOController.getCrecheControllerDao().getObjetUseByAnotherDataObject((Creche) dataObject);
+		}else if(dataObject instanceof Grid){
+			value = allDAOController.getGridControllerDao().getObjetUseByAnotherDataObject((Grid) dataObject);
+		}else if(dataObject instanceof InputDialog){
+			value = allDAOController.getInputDialogControllerDao().getObjetUseByAnotherDataObject((InputDialog) dataObject);
+		}else if(dataObject instanceof NumericRules){
+			value = allDAOController.getNumericRulesControllerDao().getObjetUseByAnotherDataObject((NumericRules) dataObject);
+		}else if(dataObject instanceof Query){
+			value = allDAOController.getQueryControllerDao().getObjetUseByAnotherDataObject((Query) dataObject);
+		}else if(dataObject instanceof Room){
+			value = allDAOController.getRoomControllerDao().getObjetUseByAnotherDataObject((Room) dataObject);
+		}else if(dataObject instanceof Topic){
+			value = allDAOController.getTopicControllerDao().getObjetUseByAnotherDataObject((Topic) dataObject);
+		} else{
+			logger.warn("Any conditions is define for isUseByAnotherDataObject this DataObject: "+dataObject.getClass());
+		}
+		return value;
+	}
+	
+	
+	
+	
 	/** ADD  **/
 
 	public void addObjetData(DataObject dataObject) {
@@ -242,8 +276,6 @@ public class ServiceDAO {
 		
 		Map<Integer, Query> listQueryOfAudit = new HashMap<Integer, Query>();
 		
-		int iBar = 0;
-
 		Map<EColumnName, Object> mapSearch = new HashMap<EColumnName, Object>();
 		mapSearch.put(EQueryColomnNameTable.ID_AUDIT, audit.getId());
 		ArrayList<Integer> listId = allDAOController.getQueryControllerDao().findIdWithValueColunm(mapSearch);

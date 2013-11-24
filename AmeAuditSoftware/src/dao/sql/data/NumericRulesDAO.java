@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import properties.PropertiesLoader;
 import dao.controller.AllControllerDAO;
 import dao.util.SqlLiteHelper;
+import data.DataObject;
 import data.NumericRules;
 
 public class NumericRulesDAO extends AbstractSqlAbtractDAO<NumericRules> {
@@ -42,7 +43,8 @@ public class NumericRulesDAO extends AbstractSqlAbtractDAO<NumericRules> {
 	public NumericRules find(int id) {
 		NumericRules obj = null;
 		ArrayList<EColumnName> columnName=  super.getListColumnName(EColomnNameTable.values());
-		ResultSet rs = connect.query(SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id));
+		String queryStr = SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id);
+		ResultSet rs = connect.query(queryStr);
 
 		if(rs != null){
 			try {
@@ -62,7 +64,7 @@ public class NumericRulesDAO extends AbstractSqlAbtractDAO<NumericRules> {
 				obj.setAnswer(allControllerDAO.getAnswerControllerDao().find(idAnswer));
 				obj.setColor(allControllerDAO.getColorControllerDao().find(idColor));
 			} catch (SQLException e) {
-				logger.error("Error Get ID of object: "+e);
+				logger.error("Error Get ID of object when excuting ["+queryStr+"]: "+e);
 			}
 		}else{
 			logger.error("No object ID: "+id+" fond in DB");
@@ -91,6 +93,11 @@ public class NumericRulesDAO extends AbstractSqlAbtractDAO<NumericRules> {
 		valuesMap.put(EColomnNameTable.ID_COLOR, obj.getColor().getId());
 		valuesMap.put(EColomnNameTable.SUP_VALUE, obj.getMaxValue());
 		return valuesMap;
+	}
+
+	@Override
+	public DataObject getObjetUseByAnotherDataObject(NumericRules obj) {
+		return null;
 	}
 
 }

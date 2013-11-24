@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -11,6 +12,8 @@ import properties.PropertiesLoader;
 import dao.controller.AllControllerDAO;
 import dao.util.SqlLiteHelper;
 import data.Audit;
+import data.DataObject;
+import data.Query;
 
 public class AuditDAO extends AbstractSqlAbtractDAO<Audit> {
 
@@ -40,27 +43,28 @@ public class AuditDAO extends AbstractSqlAbtractDAO<Audit> {
 	@Override
 	public Audit find(int id) {
 		Audit obj = null;
-			ArrayList<EColumnName> columnName=  super.getListColumnName(EColomnNameTable.values());
-			ResultSet rs = connect.query(SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id));
-			if(rs != null){
-				try {
-					//Get Grid Object
-					int idGrid = new Integer(rs.getInt(EColomnNameTable.ID_GRID.toString()));
-					//Create new Object
-					obj = new Audit(rs.getInt(EDefaultColomnName.ID.toString()),
-							rs.getString(EColomnNameTable.VERSION.toString()),
-							rs.getDate(EColomnNameTable.CREATION_DATE.toString()),
-							null,
-							rs.getBoolean(EDefaultColomnName.SHOW_ITEM.toString()));
-					
-					obj.setGrid(allControllerDAO.getGridControllerDao().find(idGrid));
-					//Set into model
-				} catch (SQLException e) {
-					logger.error("Error Get ID of object: "+e);
-				}
-			}else{
-				logger.error("No object ID: "+id+" fond in DB");
+		ArrayList<EColumnName> columnName=  super.getListColumnName(EColomnNameTable.values());
+		String queryStr = SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id);
+		ResultSet rs = connect.query(queryStr);
+		if(rs != null){
+			try {
+				//Get Grid Object
+				int idGrid = new Integer(rs.getInt(EColomnNameTable.ID_GRID.toString()));
+				//Create new Object
+				obj = new Audit(rs.getInt(EDefaultColomnName.ID.toString()),
+						rs.getString(EColomnNameTable.VERSION.toString()),
+						rs.getDate(EColomnNameTable.CREATION_DATE.toString()),
+						null,
+						rs.getBoolean(EDefaultColomnName.SHOW_ITEM.toString()));
+
+				obj.setGrid(allControllerDAO.getGridControllerDao().find(idGrid));
+				//Set into model
+			} catch (SQLException e) {
+				logger.error("Error Get ID of object when excuting ["+queryStr+"]: "+e);
 			}
+		}else{
+			logger.error("No object ID: "+id+" fond in DB");
+		}
 		return obj;
 	}
 
@@ -83,6 +87,16 @@ public class AuditDAO extends AbstractSqlAbtractDAO<Audit> {
 		valuesMap.put(EColomnNameTable.VERSION, obj.getVersion());
 		valuesMap.put(EColomnNameTable.CREATION_DATE, obj.getCreationDate().toString());
 		return valuesMap;
+	}
+
+	@Override
+	public DataObject getObjetUseByAnotherDataObject(Audit obj) {
+		for( Entry<Integer, Query> entry : allControllerDAO.getQueryControllerDao().getAllDataBase().entrySet()){
+			if(entry.getValue().getAudit().getId() == obj.getId()){
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 
 

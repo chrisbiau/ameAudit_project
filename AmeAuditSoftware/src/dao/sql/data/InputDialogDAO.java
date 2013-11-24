@@ -4,13 +4,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
 import properties.PropertiesLoader;
 import dao.controller.AllControllerDAO;
 import dao.util.SqlLiteHelper;
+import data.DataObject;
 import data.InputDialog;
+import data.Query;
 
 public class InputDialogDAO extends AbstractSqlAbtractDAO<InputDialog> {
 
@@ -38,7 +41,8 @@ public class InputDialogDAO extends AbstractSqlAbtractDAO<InputDialog> {
 	public InputDialog find(int id) {
 		InputDialog obj = null;
 		ArrayList<EColumnName> columnName=  super.getListColumnName(EColomnNameTable.values());
-		ResultSet rs = connect.query(SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id));
+		String queryStr = SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id);
+		ResultSet rs = connect.query(queryStr);
 
 		if(rs != null){
 			try {
@@ -47,7 +51,7 @@ public class InputDialogDAO extends AbstractSqlAbtractDAO<InputDialog> {
 						rs.getString(EColomnNameTable.DIALOG_TYPE.toString()),
 						rs.getBoolean(EDefaultColomnName.SHOW_ITEM.toString()));
 			} catch (SQLException e) {
-				logger.error("Error Get ID of object: "+e);
+				logger.error("Error Get ID of object when excuting ["+queryStr+"]: "+e);
 			}
 		}else{
 			logger.error("No object ID: "+id+" fond in DB");
@@ -73,6 +77,15 @@ public class InputDialogDAO extends AbstractSqlAbtractDAO<InputDialog> {
 		Map<EColumnName, Object> valuesMap = super.getMappingColumnNameAndValue(obj);
 		valuesMap.put(EColomnNameTable.DIALOG_TYPE, obj.getDialogType());
 		return valuesMap;
+	}
+	@Override
+	public DataObject getObjetUseByAnotherDataObject(InputDialog obj) {
+		for( Entry<Integer, Query> entry :  allControllerDAO.getQueryControllerDao().getAllDataBase().entrySet()){
+			if(entry.getValue().getInputDialog().getId() == obj.getId()){
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 
 

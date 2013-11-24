@@ -11,6 +11,7 @@ import properties.PropertiesLoader;
 import dao.controller.AllControllerDAO;
 import dao.util.SqlLiteHelper;
 import data.Creche;
+import data.DataObject;
 
 public class CrecheDAO extends AbstractSqlAbtractDAO<Creche> {
 
@@ -47,7 +48,8 @@ public class CrecheDAO extends AbstractSqlAbtractDAO<Creche> {
 	public Creche find(int id) {
 		Creche obj = null;
 		ArrayList<EColumnName> columnName=  super.getListColumnName(EColomnNameTable.values());
-		ResultSet rs = connect.query(SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id));
+		String queryStr = SqlLiteHelper.getReqSelectAllData(tableDataBase, columnName, id);
+		ResultSet rs = connect.query(queryStr);
 		if(rs != null){
 			try {
 				//Create new Object
@@ -63,7 +65,7 @@ public class CrecheDAO extends AbstractSqlAbtractDAO<Creche> {
 						rs.getBoolean(EDefaultColomnName.SHOW_ITEM.toString()) );
 				//Set into model
 			} catch (SQLException e) {
-				logger.error("Error Get ID of object: "+e);
+				logger.error("Error Get ID of object when excuting ["+queryStr+"]: "+e);
 			}
 		}else{
 			logger.error("No object ID: "+id+" fond in DB");
@@ -95,5 +97,10 @@ public class CrecheDAO extends AbstractSqlAbtractDAO<Creche> {
 		valuesMap.put(EColomnNameTable.NUM_DOSSIER, obj.getNumDossier());
 		valuesMap.put(EColomnNameTable.NUM_AUDIT, obj.getNumAudit());
 		return valuesMap;
+	}
+
+	@Override
+	public DataObject getObjetUseByAnotherDataObject(Creche obj) {
+		return null;
 	}
 }
