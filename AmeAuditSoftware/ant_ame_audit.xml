@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project AmeAuditSoftware with Jar-in-Jar Loader">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="D:/git/ameAudit_project/AmeAuditSoftware/exe/AmeAuditSoftware.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="start.Application"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ jxl.jar log4j-1.2.17.jar sqlite-jdbc-3.7.2.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="D:/git/ameAudit_project/AmeAuditSoftware/bin"/>
+            <zipfileset dir="D:\git\ameAudit_project\AmeAuditSoftware\lib" includes="jxl.jar"/>
+            <zipfileset dir="D:\git\ameAudit_project\AmeAuditSoftware\lib" includes="log4j-1.2.17.jar"/>
+            <zipfileset dir="D:\git\ameAudit_project\AmeAuditSoftware\lib" includes="sqlite-jdbc-3.7.2.jar"/>
+            <fileset dir="D:/git/ameAudit_project/AmeAuditSoftware/properties"/>
+        </jar>
+    </target>
+</project>
