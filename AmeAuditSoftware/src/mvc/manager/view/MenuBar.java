@@ -39,8 +39,6 @@ public class MenuBar  extends JMenuBar{
 		this.add(menu1);
 
 		JMenu menu2 = new JMenu("Vue");
-		JMenuItem acceuil = new JMenuItem(new ChangeViewAction(managerController, Eview.home, "Accueil"));
-		menu2.add(acceuil);
 		JMenuItem parser  = new JMenuItem(new UserAction(managerController, EAction.parser, "Import"));
 		menu2.add(parser);
 		JMenuItem admin  = new JMenuItem(new UserAction(managerController, EAction.adminMode, "Administrateur"));
