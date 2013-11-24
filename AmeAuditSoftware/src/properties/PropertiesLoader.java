@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -36,6 +37,8 @@ public class PropertiesLoader {
 
 	private static Properties instance = null;
 
+	private static InputStream inputStream;
+
 
 	private PropertiesLoader() {
 		super();
@@ -57,6 +60,8 @@ public class PropertiesLoader {
         return instance;
     }
 
+ 
+	
 	public static  void setPropertiesFiles(String propertiesFiles) {
 		PropertiesLoader.propertiesFiles = propertiesFiles;
 	}
@@ -107,6 +112,8 @@ public class PropertiesLoader {
 	public static TableDataBase getGridTable() {
 		return new TableDataBase(PropertiesLoader.getInstance().getProperty(GRID_TABLE_KEY));
 	}
+
+
 
 
 }

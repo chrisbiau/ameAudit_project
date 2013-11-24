@@ -1,21 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="Create Runnable Jar for Project AmeAuditSoftware with libraries in sub-folder">
+<project default="create_run_jar" name="Create Runnable Jar for Project AmeAuditSoftware with Jar-in-Jar Loader">
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
-    <target name="create_run_jar">
-        	<jar destfile="./exe/AmeAuditSoftware.jar">
+	
+	
+	<path id="project.class.path">
+	  <pathelement location="properties/config.properties"/>
+	  <pathelement location="bdd/Database.db"/>
+	</path>
+	
+	
+	<target name="clean" depends="increment_teh_build_number" description="Nettoyage">
+		 <delete dir="./exe"/>
+	</target>
+	
+	 <target name="init" depends="clean" description="Creation des repertoires de conf et bdd">
+        <mkdir dir="./exe"/>
+	 	<!-- <mkdir dir="./exe/properties"/>-->
+	 	<!-- <mkdir dir="./exe/bdd"/>-->
+	 </target>
+	
+	
+    <target name="create_run_jar" depends="init" description="Compile le code source et copie les fichiers properties">
+        <jar destfile="./exe/AmeAuditSoftware-${build.number}.jar">
             <manifest>
-                <attribute name="Main-Class" value="start.Application"/>
-                <attribute name="Class-Path" value=". lib/jxl.jar lib/sqlite-jdbc-3.7.2.jar lib/log4j-1.2.17.jar"/>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="start.Application"/>
+                <attribute name="Class-Path" value=". properties/ "/>
+                <attribute name="Rsrc-Class-Path" value="./ jxl.jar sqlite-jdbc-3.7.2.jar log4j-1.2.17.jar properties/ "/>
             </manifest>
-            <fileset dir="D:/git/ameAudit_project/AmeAuditSoftware/bin"/>
-            <fileset dir="D:/git/ameAudit_project/AmeAuditSoftware/properties"/>
+        	<fileset dir="./bin"/>
+            	<fileset dir="./bin"/>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+
+        	<zipfileset dir=".\lib" includes="jxl.jar"/>
+            <zipfileset dir=".\lib" includes="sqlite-jdbc-3.7.2.jar"/>
+            <zipfileset dir=".\lib" includes="log4j-1.2.17.jar"/>
+                <zipfileset dir=".\properties" fullpath="properties/config.properties" includes="config.properties" />
+
+                <zipfileset dir=".\properties"  includes="config.properties" />
+            	<zipfileset dir=".\properties" fullpath="properties/log4j.xml"  includes="log4j.xml" />
+            	<zipfileset dir=".\bdd" fullpath="bdd/Database.db"  includes="Database.db"/>	
+            	
         </jar>
-        	
-        <delete dir="./exe/lib"/>
-        <mkdir dir="./exe/lib"/>
-        <copy file="./lib/jxl.jar" todir="./exe/lib"/>
-        <copy file="./lib/sqlite-jdbc-3.7.2.jar" todir="./exe/lib"/>
-        <copy file="./lib/log4j-1.2.17.jar" todir="./exe/lib"/>
+        <!--<copy file="./properties/config.properties" todir="./exe/properties"/> -->
+    	<!--<copy file="./properties/log4j.xml" todir="./exe/properties"/> -->
+    	<!--<copy file="./bdd/Database.db" todir="bdd"/> -->
     </target>
+
+
+
+	<target name="increment_teh_build_number">
+	<propertyfile file="build.number"   comment="Build Number for ANT. Edit not!">
+	<entry key="build.number" type="int" 
+	     operation="+" 
+	     default="1" />
+	</propertyfile>
+
+	<echo message="Build number is ${build.number}"/>
+
+
+	</target>
+
 </project>
