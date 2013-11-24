@@ -98,8 +98,6 @@ public class NodeDetailJscrollPane extends JScrollPane implements  TreeSelection
 
 	
 	
-	
-	
 	private void buildReportDataObjectJpanel(final DataObjectTypeEnum type){
 		logger.debug("SwingWorker buildNewDataJpanel of this type"+type);
 		SwingWorker sw = new SwingWorker(){
@@ -119,7 +117,7 @@ public class NodeDetailJscrollPane extends JScrollPane implements  TreeSelection
 				});
 				panel.add(addButton,BorderLayout.SOUTH);
 				//TODO : pb remplissage txt colon
-				//panel.add(new ReportDataObjectPanel(controllerAdminMVC, type) ,BorderLayout.NORTH );
+				panel.add(new ReportDataObjectPanel(controllerAdminMVC, type) ,BorderLayout.NORTH );
 				
 				return null;
 			}
