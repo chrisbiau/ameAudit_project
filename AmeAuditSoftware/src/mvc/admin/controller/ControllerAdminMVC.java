@@ -23,6 +23,7 @@ import mvc.manager.view.ApplicationView;
 import org.apache.log4j.Logger;
 
 import dao.service.ServiceDAO;
+import data.Answer;
 import data.DataObject;
 
 public class ControllerAdminMVC   {
@@ -86,6 +87,10 @@ public class ControllerAdminMVC   {
 		sw.execute(); 
 	}
 
+	public NodeDetailJscrollPane getOptionPanel() {
+		return optionPanel;
+	}
+
 	private class adminModeListener implements DataListenerInterface {
 
 		@Override
@@ -124,6 +129,19 @@ public class ControllerAdminMVC   {
 		//Update tree model
 		MyDefaultTreeModel model = (MyDefaultTreeModel)treeList.getModel();
 		TreePath path = treeList.getSelectionPath();
+		if(dataObject instanceof Answer){
+			//Remove in model
+			DefaultMutableTreeNode mNode = treeList.searchNode(dataObject);
+			model.removeNodeFromParent(mNode);
+			
+			//Add in model
+			DefaultMutableTreeNode parentNode = treeList.searchNode(((Answer) dataObject).getQuery());
+			DefaultMutableTreeNode childNode =  new DefaultMutableTreeNode(dataObject);
+			model.insertNodeInto(childNode, parentNode, parentNode.getChildCount());
+			path = new TreePath(treeList.searchNode(dataObject).getPath());
+		}
+		
+
 		model.reload();
 		treeList.scrollPathToVisible(path);
 		treeList.setSelectionPath(path);

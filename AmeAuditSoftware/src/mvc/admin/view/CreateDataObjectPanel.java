@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import data.DataObject;
 import data.DataObjectTypeEnum;
+import data.Query;
 
 public class CreateDataObjectPanel extends JPanel implements ActionListener {
 
@@ -25,15 +26,20 @@ public class CreateDataObjectPanel extends JPanel implements ActionListener {
 	private JButton btnSave;
 	private HashMap<String, JComponent> mapPane ;
 	private final ControllerAdminMVC controllerAdminMVC;
+	private final Query queryObject;
 
 	private UtilBuildViewAdmin utilPanelAdmin;
 
-	public CreateDataObjectPanel(ControllerAdminMVC controllerAdminMVC, DataObjectTypeEnum typeDataObject) {
+	public CreateDataObjectPanel(ControllerAdminMVC controllerAdminMVC, DataObjectTypeEnum typeDataObject, Query queryObject) {
 		super(new FlowLayout(FlowLayout.LEFT));
+		this.queryObject   = queryObject;
 		this.controllerAdminMVC = controllerAdminMVC;
 		this.typeDataObject = typeDataObject;
 		if(typeDataObject!=null){
 			this.utilPanelAdmin = new UtilBuildViewAdmin(typeDataObject);
+			if(queryObject != null){
+				utilPanelAdmin.setQeury(queryObject);
+			}
 			JPanel panel = this.utilPanelAdmin.createJpanel();
 
 			this.setLayout(new BorderLayout());

@@ -4,11 +4,14 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Set;
 
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -41,6 +44,8 @@ public class UtilBuildViewAdmin {
 	private final   HashMap<Field, JComponent> mapPane = new HashMap<Field, JComponent>();
 	private int nblgn = 0;
 
+	private Query queryObject = null;
+
 
 	public UtilBuildViewAdmin( DataObject dataObjectSelected) {
 		super();
@@ -69,14 +74,14 @@ public class UtilBuildViewAdmin {
 
 	public JPanel createJpanel(){
 		JPanel panel = new JPanel(new GridBagLayout());
-	
+
 		GridBagConstraints componentGbc = new GridBagConstraints();
 		componentGbc.insets = new Insets(5, 0, 5, 5);
 		componentGbc.fill = GridBagConstraints.HORIZONTAL;
 
 		try {
 			Field[] fieldSuper = typeClass.getSuperclass().getDeclaredFields();
-			
+
 			//ID
 			for(Field field : fieldSuper){
 				field.setAccessible(true);
@@ -92,7 +97,7 @@ public class UtilBuildViewAdmin {
 					inputComponent.setPreferredSize(d);
 					addComponentsAndLabael(panel, componentGbc, field, inputComponent);
 				}
-		
+
 			}
 
 			//All field of class
@@ -108,6 +113,11 @@ public class UtilBuildViewAdmin {
 					String valueTxt = "";
 					if(dataObjectSelected != null && field.get(dataObjectSelected) != null ){
 						valueTxt = field.get(dataObjectSelected).toString();
+						//Si color
+						if(valueTxt.startsWith("#") && valueTxt.length() == 7){
+							inputComponent.setBackground(java.awt.Color.decode(valueTxt));
+							inputComponent.addMouseListener(new colorMouseListener());
+						}
 					} 
 					((JTextField) inputComponent).setText(valueTxt);
 					Dimension d = inputComponent.getPreferredSize( );
@@ -140,11 +150,21 @@ public class UtilBuildViewAdmin {
 					}
 
 					// TODO: if answer
-					if(dataObjectSelected != null &&  field.get(dataObjectSelected) != null ){
+					if( field.getType() == Query.class && queryObject !=null){
 						for ( int i = 0;  i < ((JComboBox)inputComponent).getItemCount(); i++) {
 							DataObject data = (DataObject) ((JComboBox)inputComponent).getItemAt(i);
-							if(data.getId() == ((DataObject)field.get(dataObjectSelected)).getId()){
+							if(data.getId() == queryObject.getId()){
+								
 								((JComboBox)inputComponent).setSelectedIndex(i);
+							}
+						}
+					}else{				
+						if(dataObjectSelected != null &&  field.get(dataObjectSelected) != null ){
+							for ( int i = 0;  i < ((JComboBox)inputComponent).getItemCount(); i++) {
+								DataObject data = (DataObject) ((JComboBox)inputComponent).getItemAt(i);
+								if(data.getId() == ((DataObject)field.get(dataObjectSelected)).getId()){
+									((JComboBox)inputComponent).setSelectedIndex(i);
+								}
 							}
 						}
 					}
@@ -152,7 +172,7 @@ public class UtilBuildViewAdmin {
 
 				addComponentsAndLabael(panel, componentGbc,field, inputComponent);
 			}
-			
+
 			//Valid field
 			for(Field field : fieldSuper){
 				if(field.getType() ==  boolean.class){
@@ -167,8 +187,8 @@ public class UtilBuildViewAdmin {
 				}
 			}
 
-			
-			
+
+
 		} catch (IllegalArgumentException e) {
 			logger.warn("Introspection :Error when creating Edit DataObject panel "+e);
 			e.printStackTrace();
@@ -194,14 +214,13 @@ public class UtilBuildViewAdmin {
 
 			componentGbc.gridx = 1;
 			panel.add(inputComponent, componentGbc);
-			
+
 			nblgn ++;
 		}
 	}
 
 
 	public  DataObject getDataObjectFromMap() {
-		//Field[] fields = dataObject.getClass().getDeclaredFields();
 		Set<Field> fields = mapPane.keySet();
 		for(Field field : fields){
 			try {
@@ -225,7 +244,7 @@ public class UtilBuildViewAdmin {
 				}else{
 					logger.warn("updating ObjectData any component of this class:"+ componentOfPanel.getClass() +"  - this component is not save in object: "+dataObjectSelected.getClass()  );
 				}
-				
+
 			} catch (IllegalArgumentException e) {
 				logger.warn("Introspection :Error when setting Edit DataObject panel "+e);
 				e.printStackTrace();
@@ -236,11 +255,56 @@ public class UtilBuildViewAdmin {
 		}
 		return dataObjectSelected;
 	}
-	
+
 	public HashMap<Field, JComponent> getMapPane() {
 		return mapPane;
 	}
 
 
+
+
+	private class colorMouseListener implements MouseListener {
+
+		@Override
+		public void mouseReleased(MouseEvent mouseevent) {
+		}
+
+		@Override
+		public void mousePressed(MouseEvent mouseevent) {
+			dialogColor(mouseevent);
+		}
+
+		@Override
+		public void mouseExited(MouseEvent mouseevent) {
+
+		}
+
+		@Override
+		public void mouseEntered(final MouseEvent mouseevent) {
+		}
+
+
+		@Override
+		public void mouseClicked(MouseEvent mouseevent) {
+		}
+		
+		private void dialogColor(MouseEvent mouseevent){
+			String value = ((JTextField) mouseevent.getSource()).getText();
+			java.awt.Color background = JColorChooser.showDialog(null,"Choisir une couleur: ", java.awt.Color.decode(value));
+			if (background != null) {
+				((JTextField)	mouseevent.getSource()).setBackground(background);
+				String rgb = Integer.toHexString(background.getRGB());
+				rgb = "#"+rgb.substring(2, rgb.length());
+				((JTextField)	mouseevent.getSource()).setText(rgb);
+			}
+		}
+	}
+
+
+
+
+	public void setQeury(Query queryObject) {
+		this.queryObject = queryObject;		
+	}
 
 }

@@ -64,8 +64,7 @@ public class EditDataObjectPanel extends JPanel implements ActionListener {
 			dataObject = this.utilPanelAdmin.getDataObjectFromMap();
 			controllerAdminMVC.updateObjetData(dataObject);
 		}else if(e.getSource() == btnAddNewAnswer){
-		//TODO:
-			logger.warn("TODO: TRAITER CAS NEW ANSWER");
+			controllerAdminMVC.getOptionPanel().buildCreateDataObjectJpanel(DataObjectTypeEnum.ANSWER, (Query)dataObject);
 		}else if(e.getSource() ==  btnRemove){
 			controllerAdminMVC.removeObjetData(dataObject);
 		}

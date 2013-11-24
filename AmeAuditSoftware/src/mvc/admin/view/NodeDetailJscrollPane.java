@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import data.DataObject;
 import data.DataObjectTypeEnum;
+import data.Query;
 
 public class NodeDetailJscrollPane extends JScrollPane implements  TreeSelectionListener {
 	private static Logger logger = Logger.getLogger(NodeDetailJscrollPane.class);
@@ -75,13 +76,13 @@ public class NodeDetailJscrollPane extends JScrollPane implements  TreeSelection
 
 
 
-	private void buildCreateDataObjectJpanel(final DataObjectTypeEnum type){
+	public void buildCreateDataObjectJpanel(final DataObjectTypeEnum type, final Query dataObject){
 		logger.debug("SwingWorker buildNewDataJpanel of this type"+type);
 		SwingWorker sw = new SwingWorker(){
 			@Override
 			protected Object doInBackground() throws Exception {
 				logger.debug("SwingWorker doInBackground of this object"+type);
-				panel  = new CreateDataObjectPanel(controllerAdminMVC, type  );
+				panel  = new CreateDataObjectPanel(controllerAdminMVC, type , dataObject );
 				return null;
 			}
 
@@ -95,14 +96,12 @@ public class NodeDetailJscrollPane extends JScrollPane implements  TreeSelection
 		};
 		sw.execute();
 	}
-
-	
 	
 	private void buildReportDataObjectJpanel(final DataObjectTypeEnum type){
 		logger.debug("SwingWorker buildNewDataJpanel of this type"+type);
-		SwingWorker sw = new SwingWorker(){
-			@Override
-			protected Object doInBackground() throws Exception {
+//		SwingWorker sw = new SwingWorker(){
+//			@Override
+//			protected Object doInBackground() throws Exception {
 				logger.debug("SwingWorker doInBackground of this object"+type);
 				 panel = new JPanel();
 				
@@ -112,25 +111,25 @@ public class NodeDetailJscrollPane extends JScrollPane implements  TreeSelection
 				addButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						buildCreateDataObjectJpanel(type);
+						buildCreateDataObjectJpanel(type,null);
 					}
 				});
 				panel.add(addButton,BorderLayout.SOUTH);
 				//TODO : pb remplissage txt colon
 				panel.add(new ReportDataObjectPanel(controllerAdminMVC, type) ,BorderLayout.NORTH );
-				
-				return null;
-			}
-
-			@Override
-			public void done(){  
-				if(SwingUtilities.isEventDispatchThread()){
-					logger.debug("SwingWorker done "+type.toString());
+//				
+//				return null;
+//			}
+//
+//			@Override
+//			public void done(){  
+//				if(SwingUtilities.isEventDispatchThread()){
+//					logger.debug("SwingWorker done "+type.toString());
 					setViewportView(panel);
-				}
-			}         
-		};
-		sw.execute();
+//				}
+//			}         
+//		};
+//		sw.execute();
 	}
 
 
