@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="AuditAmeProject" basedir="." default="run">
+	
+	<!-- Definition des proprietes du projet -->
+    <property name="src.dir" value="src" />
+    <property name="classes.dir" value="classes" />
+	<property name="lib.dir"  value="lib" />
+    <property name="dist.dir" value="dist" />
+    <property name="properties.dir" value="properties" />
+	<property name="projet.version" value="0.0.10" />
+	<property name="projet.bin.dir" value="bin" />
+
+	<!-- Definition du classpath du projet -->
+	<path id="projet.classpath">
+		<fileset dir="${lib.dir}" casesensitive="yes">
+			<include name="jxl.jar"/>
+			<include name="log4j-1.2.17.jar"/>
+			<include name="sqlite-jdbc-3.7.2.jar"/>
+		</fileset>
+		<pathelement location="${properties.dir}/config.properties" />
+	</path>
+	
+	<target name="init" depends="clean">
+        <mkdir dir="${classes.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${projet.bin.dir}" /> 
+	</target>
+	
+    <target name="clean" description="Delete all generated files" >
+        <delete dir="${classes.dir}" failonerror="false" />
+        <delete dir="${dist.dir}" failonerror="false" />
+        <delete file="${ant.project.name}.jar" />
+    </target>
+
+	
+	<!-- Compilation des classes du projet -->
+	  <target name="compile" depends="init" description="Compilation des classes" >
+	    <javac includeantruntime="false"
+	  			  srcdir="${src.dir}" 
+		          destdir="${classes.dir}" 
+				  debug="on" 
+				  optimize="off" 
+				  deprecation="on">
+	      <classpath refid="projet.classpath"/>
+	    </javac>
+	  </target>
+	
+	
+
+	  <manifestclasspath property="jar.classpath" jarfile="${dist.dir}/${ant.project.name}.jar">
+	     <classpath refid="projet.classpath" />
+	  </manifestclasspath>
+	
+	
+    <target name="jar" description="JARs the Task" depends="compile">
+        <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+            	<attribute name="Main-Class" value="start.Application"/>
+            	<attribute name="Built-By" value="${user.name}" />
+                <!-- finally, use the magically generated libs path -->
+                <attribute name="Class-Path"  value="${jar.classpath}"/>
+            </manifest>
+        	  <!--  -->
+        	  <zipfileset file="${properties.dir}/config.properties" prefix="${properties.dir}"/>
+        		<zipfileset file="${lib.dir}/jxl.jar" prefix="${lib.dir}"/>
+        	  	<zipfileset file="${lib.dir}/log4j-1.2.17.jar" prefix="${lib.dir}"/>
+        	  	<zipfileset file="${lib.dir}/sqlite-jdbc-3.7.2.jar" prefix="${lib.dir}"/>
+        	  <zipfileset file="bdd/Database.db" prefix="bdd" />
+        </jar>	
+    </target>
+	
+    <target name="run" depends="jar">
+        <java jar="${dist.dir}/${ant.project.name}.jar" fork="true" />
+    </target>
+
+</project>
