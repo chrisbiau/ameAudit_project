@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="AuditAmeProject" basedir="." default="run">
 
+	<property name="version.num" value="1-00"/>
+	
 	<!-- Definition des proprietes du projet -->
 	<property name="src.dir" value="src" />
 	<property name="classes.dir" value="classes" />
@@ -12,8 +14,7 @@
 	<property name="out.dir" value="dist/AmeProject" />
 	<property name="out.lib.dir" value="${out.dir}/${in.lib.dir}" />
 	<property name="out.properties.dir" value="${out.dir}/${in.properties.dir}" />
-	<property name="out.bdd.dir" value="${out.dir}/{in.bdd.dir}" />
-	<property name="jar.file.dir" value="${out.dir}/${ant.project.name}.jar" />
+	<property name="out.bdd.dir" value="${out.dir}/${in.bdd.dir}" />
 
 	<path id="projet.classpath" description="Class-path of project">
 		<fileset dir="${out.lib.dir}" casesensitive="yes">
@@ -55,17 +56,23 @@
 		<tstamp>
 			<format property="build.time" pattern="dd-MM-yy_hh:mm" unit="hour" />
 		</tstamp>
-
+		
 		<propertyfile file="buildVersion.properties" comment="Build Number for ANT. AME PROJECT">
 			<entry key="build.number" type="int" operation="+" default="1"  pattern="00"/>
 			<entry key="build.date" type="date"  value="${build.time}"  />
 		</propertyfile>
-		<!-- <echo message="Build number is ${build.number}" />  -->
+		
+		
+
+		<buildnumber file="buildVersion.properties"/>
+		<property name="app.version" value="${version.num}-b${build.number}" />
+		<echo message="Build number is ${app.version}" /> 
 	</target>
 
 
 	<!-- Build JAR  -->
 	<target name="jar" depends="compile" description="Build JAR">
+		<property name="jar.file.dir" value="${out.dir}/${ant.project.name}_${version.num}-b${build.number}.jar" />
 		<manifestclasspath property="jar.classpath" jarfile="${jar.file.dir}">
 			<classpath refid="projet.classpath" />
 		</manifestclasspath>
@@ -76,6 +83,8 @@
 				<attribute name="Built-By" value="${user.name}" />
 				<attribute name="Class-Path" value="${jar.classpath} ${in.properties.dir}/" />
 				<attribute name="versionApp" value="${build.number}" />
+				 <attribute name="Implementation-Version"   value="${version.num}-b${build.number}"/>   
+				 <attribute name="Built-Date" value="${build.time}"/>     
 			</manifest>
 		</jar>
 	</target>

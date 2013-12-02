@@ -1,6 +1,8 @@
 package mvc.manager.view;
 
 import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -35,11 +37,29 @@ public class ApplicationView extends JFrame{
 	 * @param allModelMVC
 	 */
 
-	public ApplicationView(ManagerMVC managerMVC) {
+	public ApplicationView(final ManagerMVC managerMVC) {
 		super();
 		this.managerMVC =managerMVC;
 		initialize();
 		this.setVisible(true);
+		
+		this.addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosing(WindowEvent e){
+//TODO: A ameliorer la sauvegarde avant de quitter
+//            	int resultat=JOptionPane.showConfirmDialog(
+//            			managerMVC.getApplicationView(),
+//            			"Voulez vous quitter l'application ? \n",
+//            			"Voulez vous quitter l'application ?",
+//            			JOptionPane.OK_OPTION);
+
+//            	if(resultat == JOptionPane.YES_OPTION){
+            		if(managerMVC.getManagerController().checkSaveDialog()){
+            			System.exit(0);
+            		}
+//            	}
+            }
+        });
 	}
 
 	/**
@@ -130,5 +150,8 @@ public class ApplicationView extends JFrame{
 		}
 
 	}
+	
+	
+	
 
 }

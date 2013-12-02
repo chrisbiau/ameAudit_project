@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import javax.swing.JOptionPane;
+
 import org.apache.log4j.Logger;
 
 import properties.PropertiesLoader;
@@ -38,6 +40,13 @@ public class ConnectionSqlLite {
 			this.connect();
 		}else{
 			logger.error("Database File: "+ dBPath + " doesn't exit");
+			JOptionPane.showMessageDialog(
+					null,
+					"Impossible de charger le fichier suivant :\n"
+							+dBPath+
+							" fichier introuvable",
+							"Impossible de charger la base de donnée",
+							JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
