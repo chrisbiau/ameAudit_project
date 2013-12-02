@@ -45,6 +45,10 @@ public class SaveFunctionHelper {
 		int returnValSave = saveFileDialog.showSaveDialog(managerMVC.getApplicationView().getContentPane());
 		if(returnValSave == JFileChooser.APPROVE_OPTION){
 			File fileSave = saveFileDialog.getSelectedFile();
+			if(!fileSave.getPath().toLowerCase().endsWith(".ameaudit"))
+			{
+				fileSave = new File (fileSave.getPath() + ".ameaudit");
+			}
 			saveModelResultToFile(managerMVC.getModelToSave().exportModelToSave(), fileSave);
 			status = true;
 		}

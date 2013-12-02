@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import mvc.ManagerMVC;
-import mvc.common.util.DataListenerInterface;
 import mvc.common.util.DataObservable;
 import mvc.form.view.AuditJTabbedPane;
 
@@ -31,7 +30,6 @@ public class ModelFormMVC {
 	private static Logger logger = Logger.getLogger(ModelFormMVC.class);
 	protected String logNameModel;
 
-	private final ListenerSelectedAudit listenerSelectedAudit = new ListenerSelectedAudit();
 	//DataModel
 
 	protected Map<Integer, Audit> mvcAuditModel = new HashMap<Integer, Audit>();
@@ -56,7 +54,6 @@ public class ModelFormMVC {
 		this.logNameModel = logNameModel;
 		this.serviceDAO = managerMVC.getServiceDAO();
 		queryOfAuditModel.setValue(new HashMap<Integer, Query>());
-		managerMVC.getModelToSave().getSelectedAudit().addListener(listenerSelectedAudit);
 	}
 
 
@@ -163,17 +160,5 @@ public class ModelFormMVC {
 
 
 
-	private class ListenerSelectedAudit implements DataListenerInterface {
-
-		@Override
-		public void dataChange(Object ojbUpdated) {
-			if(ojbUpdated != null){
-				getQueryModelByAudit((Audit) ojbUpdated);
-
-				System.out.println("AUDIT CHANGE "+((Audit) ojbUpdated).getVersion());
-			}
-		}
-
-	}
 }
 

@@ -11,7 +11,6 @@ import javax.swing.JTabbedPane;
 import mvc.ManagerMVC;
 import mvc.common.util.DataListenerInterface;
 import mvc.form.model.ModelFormMVC;
-import start.AppProgressBar;
 import data.Audit;
 import data.Query;
 
@@ -42,8 +41,9 @@ public class AuditJTabbedPane extends JTabbedPane {
 
 	public void addAudit(final Audit audit){
 		ModelFormMVC modelForm = managerMVC.getFormMVC().getControllerFormMVC().getModelFormMVC();
+		managerMVC.getFormMVC().getControllerFormMVC().getModelFormMVC().getQueryModelByAudit(audit);
 		HashMap<Integer, HashMap<Integer, ArrayList<Query>>> mapRoomTopicQuery = modelForm.getMapRoomTopicQuery(audit);
-		AppProgressBar.getInstance().setMaximumProgressBar(modelForm.getNbQueryOfSelectedAudit());
+//		AppProgressBar.getInstance().setMaximumProgressBar(modelForm.getNbQueryOfSelectedAudit());
 		add(audit.getGrid().getName(),new RoomJTabbedPane(managerMVC, mapRoomTopicQuery));
 	}
 

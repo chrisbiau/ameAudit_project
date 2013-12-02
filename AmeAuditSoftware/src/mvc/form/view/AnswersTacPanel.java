@@ -341,6 +341,8 @@ public class AnswersTacPanel extends JPanel {
 			modelToSave.getResultByQueryId().getValue().put(query.getId(), value);
 		}
 		modelToSave.getResultByQueryId().notiffyAllListeners();
+		//Set modify form
+		managerMVC.getModelManager().setNewModifForm(true);
 	}
 
 

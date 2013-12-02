@@ -21,29 +21,27 @@ public class ExportModelToSave  implements Serializable {
 
 	protected  Map<Integer, HashMap<Integer, Result>> resultByQueryId = null;
 	protected  Creche selectedCreche = null;
-	protected  Audit selectedAudit = null;
+	protected  Audit selectedAuditEnv = null;
 
+	protected  Audit selectedAuditSoc= null;
 
-	public Audit getSelectedAudit() {
-		return selectedAudit;
-	}
-
+	
 
 	public ExportModelToSave(ModelToSave modelToSave) {
 		resultByQueryId = modelToSave.getResultByQueryId().getValue();
-		selectedAudit = modelToSave.getSelectedAudit().getValue();
+		selectedAuditEnv = modelToSave.getSelectedAuditEnv().getValue();
+		selectedAuditSoc = modelToSave.getSelectedAuditSoc().getValue();
 		selectedCreche = modelToSave.getSelectedCreche().getValue();
-		logger.debug("Export: Audit: "+selectedAudit+ " - Creche: "+selectedCreche );
+		logger.debug("Export: Audit: "+selectedAuditEnv+ " - Creche: "+selectedCreche );
 	}
 
 
 	public  void importModelToSave(ModelToSave modelToSave) {
-		modelToSave.setSelectedAudit(selectedAudit);
+		modelToSave.setSelectedAuditEnv(selectedAuditEnv);
+		modelToSave.setSelectedAuditSoc(selectedAuditSoc);
 		modelToSave.setSelectedCreche(selectedCreche);
 		modelToSave.setResultByQueryId(resultByQueryId);
-
-		logger.info("Import: Audit: "+selectedAudit+ " - Creche: "+selectedCreche );
-
+		logger.info("Import: Audit: "+selectedAuditEnv+ " - Creche: "+selectedCreche );
 	}
 
 }

@@ -149,7 +149,6 @@ public class UtilBuildViewAdmin {
 						logger.warn("Aucun champs ne correspond à un DataObject: "+field.getType().getClass() );
 					}
 
-					// TODO: if answer
 					if( field.getType() == Query.class && queryObject !=null){
 						for ( int i = 0;  i < ((JComboBox)inputComponent).getItemCount(); i++) {
 							DataObject data = (DataObject) ((JComboBox)inputComponent).getItemAt(i);

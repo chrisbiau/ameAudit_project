@@ -13,12 +13,6 @@ import data.Result;
 
 public class ModelToSave  {
 
-
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 3495464793169725950L;
-
 	private static Logger logger = Logger.getLogger(ModelToSave.class);
 	protected String logNameModel;
 
@@ -27,16 +21,20 @@ public class ModelToSave  {
 
 
 	protected DataObservable<Creche> selectedCreche = new DataObservable<Creche>();
-	protected DataObservable<Audit> selectedAudit = new DataObservable<Audit>();
+	protected DataObservable<Audit> selectedAuditEnv = new DataObservable<Audit>();
+
+	protected DataObservable<Audit> selectedAuditSoc = new DataObservable<Audit>();
+
 
 
 	public ModelToSave(String logNameModel) {
 		super();
+		logger.debug("init model");		
 		this.logNameModel = logNameModel;
 
 		resultByQueryId.setValue(new HashMap<Integer, HashMap<Integer, Result> >());
 		selectedCreche.setValue(new Creche("", false));
-		selectedAudit.setValue(new Audit());
+		selectedAuditEnv.setValue(new Audit());
 	}
 
 
@@ -48,12 +46,20 @@ public class ModelToSave  {
 		this.selectedCreche.setValue(selectedCreche);
 	}
 
-	public void setSelectedAudit(Audit selectedAduit) {
-		this.selectedAudit.setValue(selectedAduit);
+	public void setSelectedAuditEnv(Audit selectedAduit) {
+		this.selectedAuditEnv.setValue(selectedAduit);
 	}
 
-	public DataObservable<Audit> getSelectedAudit() {
-		return selectedAudit;
+	public DataObservable<Audit> getSelectedAuditEnv() {
+		return selectedAuditEnv;
+	}
+
+	public void setSelectedAuditSoc(Audit selectedAduit) {
+		this.selectedAuditSoc.setValue(selectedAduit);
+	}
+
+	public DataObservable<Audit> getSelectedAuditSoc() {
+		return selectedAuditSoc;
 	}
 
 

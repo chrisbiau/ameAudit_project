@@ -26,7 +26,6 @@ import mvc.ManagerMVC;
 
 import org.apache.log4j.Logger;
 
-import start.AppProgressBar;
 import data.Query;
 
 public class AnswerTreeViewJPanel extends JPanel{
@@ -57,7 +56,7 @@ public class AnswerTreeViewJPanel extends JPanel{
 			DefaultMutableTreeNode containerAnswerPanel = new DefaultMutableTreeNode(new AnswersTacPanel(managerMVC, query));
 			rootQuery.add(containerAnswerPanel);
 			root.add(rootQuery);
-			AppProgressBar.getInstance().setOneMoreProgressBar();
+//			AppProgressBar.getInstance().setOneMoreProgressBar();
 		}
 
 		tree = new JTree(root);

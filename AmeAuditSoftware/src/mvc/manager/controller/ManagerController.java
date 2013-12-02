@@ -1,6 +1,7 @@
 package mvc.manager.controller;
 
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import mvc.ManagerMVC;
@@ -26,7 +27,7 @@ public class ManagerController {
 
 	private ServiceDAO serviceDAO = null;
 	private ManagerMVC managerMVC = null;
-	
+
 	public ManagerController(ManagerMVC managerMVC ) {
 		this.applicationView = managerMVC.getApplicationView();
 		this.serviceDAO = managerMVC.getServiceDAO();
@@ -63,37 +64,43 @@ public class ManagerController {
 		applicationView.setRightPanel(panelRight);
 	}
 
-	public void userAction(EAction eAction) {
-
+	public boolean userAction(EAction eAction) {
+		boolean result = false;
 		switch(eAction){
 		case newAudit:
-			if(AuditFunctionHelper.newAudit(managerMVC)){
-				managerMVC.getFormMVC().getControllerFormMVC().displayPanel(Eview.form);
-				managerMVC.getApplicationView().setTitle("Nouveau audit");
-			}else{
-				logger.info("Selected creche or audit is invalid");
+			if(checkSaveDialog()){
+				if(AuditFunctionHelper.newAudit(managerMVC)){
+					managerMVC.getFormMVC().getControllerFormMVC().displayPanel(Eview.form);
+					managerMVC.getApplicationView().setTitle("Nouveau audit");
+				}else{
+					logger.info("Selected creche or audit are invalid");
+				}
 			}
 
 			break;
 		case openAudit:
-			if(SaveFunctionHelper.openAudit(managerMVC)){
-				managerMVC.getFormMVC().getControllerFormMVC().displayPanel(Eview.form);
-				
-				managerMVC.getApplicationView().setTitle(managerMVC.getModelToSave().getSelectedAudit().getValue().getGrid().getName());
-			}else{
-				logger.error("Error when opening file");
+
+			if(checkSaveDialog()){
+				if(SaveFunctionHelper.openAudit(managerMVC)){
+					managerMVC.getFormMVC().getControllerFormMVC().displayPanel(Eview.form);
+					// managerMVC.getApplicationView().setTitle(managerMVC.getModelToSave().getSelectedAuditEnv().getValue().getGrid().getName());
+				}else{
+					logger.error("Error when opening file");
+				}
 			}
 			break;
 
 		case saveAudit:
 			if(SaveFunctionHelper.saveAudit(managerMVC)){
 				logger.info("Audit is save");
+				result = true;
 			}else{
 				logger.error("Error when saving audit");
+				result = false;
 			}
 			break;
-			
-			
+
+
 		case adminMode:
 			if(managerMVC.getModelManager().getAdminMode().getValue() == false){
 				if(AuditFunctionHelper.changeAdminMode(managerMVC)){
@@ -109,12 +116,13 @@ public class ManagerController {
 			break;		
 
 		case parser:
-//			ReadExcel r = new ReadExcel(this);
+			//			ReadExcel r = new ReadExcel(this);
 			break;
 		default:
 			logger.error("EAction not reference"+eAction);
 			break;
 		}
+		return result;
 
 	}
 
@@ -128,6 +136,34 @@ public class ManagerController {
 
 	public void updateCrecheData(Creche crecheSelected) {
 		serviceDAO.updateObjetData(crecheSelected);
+	}
+
+
+	public boolean checkSaveDialog(){
+		boolean result =  true;
+		if(this.managerMVC.getModelManager().isNewModifForm()){
+			logger.info("Formulaire is modify => Save action");
+			int resultat=JOptionPane.showConfirmDialog(
+					managerMVC.getApplicationView(),
+					"Cette action va supprimer les dernieres modifications \n"+
+							"Voulez-vous sauvegarder ?",
+							"Voulez-vous sauvegarder ?",
+							JOptionPane.YES_NO_CANCEL_OPTION);
+
+			if ( resultat == JOptionPane.YES_OPTION) {
+				logger.info(" Save action => yes");
+				result = this.userAction(EAction.saveAudit); // si save ok returne true
+			}else if ( resultat == JOptionPane.CANCEL_OPTION) {
+				result = false; //ne pas continuer
+			}else if ( resultat == JOptionPane.NO_OPTION) {
+				result = true; //continer sans sauver
+			}
+			if(result){
+				managerMVC.getModelManager().setNewModifForm(false);
+			}
+			logger.info(" Save action = "+result);
+		}
+		return result;
 	}
 
 }

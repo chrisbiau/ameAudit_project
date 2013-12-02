@@ -12,45 +12,68 @@ import javax.swing.UIManager;
 
 import mvc.ManagerMVC;
 import mvc.form.view.CrecheDialog;
-
-import org.apache.log4j.Logger;
-
 import data.Audit;
 import data.Creche;
 
 public class AuditFunctionHelper {
 
-	private static Logger logger = Logger.getLogger(AuditFunctionHelper.class);
+//	private static Logger logger = Logger.getLogger(AuditFunctionHelper.class);
 	private static  Icon infoIcon = UIManager.getIcon("OptionPane.questionIcon");
-	
-	
+
+
 	public static boolean newAudit (ManagerMVC managerMVC){
 
-		boolean status = true;
-		Map<Integer, Audit> listAuditModel = managerMVC.getModelManager().getListAuditModel().getValue();
-		if(status = true){
-			managerMVC.getModelToSave().setSelectedAudit(null);
-			//Selection Audit
-			Object[] listAuditVersion = listAuditModel.values().toArray();
-			Audit auditSelected = (Audit) JOptionPane.showInputDialog(
-					managerMVC.getApplicationView().getContentPane(),
-					"Selectionner une version de grille d'audit: \n",
-					"Selection version Audit",
-					JOptionPane.PLAIN_MESSAGE,
-					infoIcon,
-					listAuditVersion,"");
+		boolean status = false;
+		Map<Integer, Audit> listAuditEnvModel = managerMVC.getModelManager().getListAuditEnvModel().getValue();
+		managerMVC.getModelToSave().setSelectedAuditEnv(null);
+		//Selection Audit Envvironement
+		Object[] listAuditEnvVersion = listAuditEnvModel.values().toArray();
+		Audit auditEnvSelected = (Audit) JOptionPane.showInputDialog(
+				managerMVC.getApplicationView().getContentPane(),
+				"Selectionner une version de grille d'audit environnement: \n",
+				"Selection version audit environnement",
+				JOptionPane.PLAIN_MESSAGE,
+				infoIcon,
+				listAuditEnvVersion,"");
 
-			managerMVC.getModelToSave().setSelectedAudit(auditSelected);
-			if(auditSelected == null){
-				JOptionPane.showMessageDialog(managerMVC.getApplicationView().getContentPane(),
-						"Aucune version d'audit selectionÃ©e ",
-						"Erreur: Selection audit",
-						JOptionPane.ERROR_MESSAGE);
-				status = false;
-			} 
+		if(auditEnvSelected == null){
+			JOptionPane.showMessageDialog(managerMVC.getApplicationView().getContentPane(),
+					"Aucune version d'audit environement selectionée ",
+					"Erreur: Selection audit",
+					JOptionPane.ERROR_MESSAGE);
+		} else{
+			managerMVC.getModelToSave().setSelectedAuditEnv(auditEnvSelected);
+			status = true;
 		}
-		if(status = true){
-			
+
+
+
+		Map<Integer, Audit> listAuditSocModel = managerMVC.getModelManager().getListAuditSocModel().getValue();
+		managerMVC.getModelToSave().setSelectedAuditSoc(null);
+		//Selection Audit social
+		Object[] listAuditSociaVersion = listAuditSocModel.values().toArray();
+		Audit auditSociSelected = (Audit) JOptionPane.showInputDialog(
+				managerMVC.getApplicationView().getContentPane(),
+				"Selectionner une version de grille d'audit sociale: \n",
+				"Selection version audit sociale",
+				JOptionPane.PLAIN_MESSAGE,
+				infoIcon,
+				listAuditSociaVersion,"");
+
+		if(auditSociSelected == null){
+			JOptionPane.showMessageDialog(managerMVC.getApplicationView().getContentPane(),
+					"Aucune version d'audit sociale selectionée ",
+					"Erreur: Selection audit",
+					JOptionPane.ERROR_MESSAGE);
+		} else{
+			managerMVC.getModelToSave().setSelectedAuditSoc(auditSociSelected);
+			status = true;
+		}
+
+
+		//Si audit selectionee
+		if(status){
+
 			managerMVC.getModelToSave().setSelectedCreche(new Creche("", false));
 			//Selection creche
 
@@ -78,6 +101,8 @@ public class AuditFunctionHelper {
 						"Erreur: Selection creche",
 						JOptionPane.ERROR_MESSAGE);
 				status = false;
+			}else{
+				status = true;
 			}
 		}
 		return status;
@@ -95,12 +120,12 @@ public class AuditFunctionHelper {
 		JLabel jPassword = new JLabel("Password");
 		JTextField password = new JPasswordField();
 		Object[] ob = {jUserName, userName, jPassword, password};
-		
+
 		int result = JOptionPane.showConfirmDialog(managerMVC.getApplicationView().getContentPane(), 
 				ob,
 				"Please input password for JOptionPane showConfirmDialog",
 				JOptionPane.OK_CANCEL_OPTION);
-		
+
 		if (result == JOptionPane.OK_OPTION) {
 			//String userNameValue = userName.getText();
 			String passwordValue = password.getText();
@@ -114,10 +139,10 @@ public class AuditFunctionHelper {
 						"Erreur: login",
 						JOptionPane.ERROR_MESSAGE);
 			}
-				
+
 		}
-		
-		
+
+
 		return status;
 	}
 
