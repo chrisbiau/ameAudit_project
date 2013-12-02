@@ -22,6 +22,10 @@ import data.DataObjectTypeEnum;
 import data.Query;
 
 public class NodeDetailJscrollPane extends JScrollPane implements  TreeSelectionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger logger = Logger.getLogger(NodeDetailJscrollPane.class);
 	JPanel panel = new JPanel();
 	private final ControllerAdminMVC controllerAdminMVC;

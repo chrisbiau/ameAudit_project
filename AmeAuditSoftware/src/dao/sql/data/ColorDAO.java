@@ -15,7 +15,7 @@ import data.Answer;
 import data.Color;
 import data.DataObject;
 
-public class ColorDAO<K> extends AbstractSqlAbtractDAO<Color> {
+public class ColorDAO extends AbstractSqlAbtractDAO<Color> {
 
 	private static Logger logger = Logger.getLogger(ColorDAO.class);
 

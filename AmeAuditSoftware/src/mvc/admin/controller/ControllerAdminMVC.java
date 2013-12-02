@@ -17,7 +17,6 @@ import mvc.admin.view.MyDefaultTreeModel;
 import mvc.admin.view.NodeDetailJscrollPane;
 import mvc.common.enumeration.Eview;
 import mvc.common.util.DataListenerInterface;
-import mvc.manager.model.ModelToSave;
 import mvc.manager.view.ApplicationView;
 
 import org.apache.log4j.Logger;
@@ -36,20 +35,17 @@ public class ControllerAdminMVC   {
 
 	private AdminSplitPane adminPanel;
 	private final ManagerMVC managerMVC;
-	private final ModelAdminMVC modelFormMVC;
 	private final ApplicationView applicationView;
-	private final ModelToSave modelToSave;
 	private   Component treePanel ;
 	private   NodeDetailJscrollPane optionPanel;
 
 
 
 	public ControllerAdminMVC(ManagerMVC managerMVC, ModelAdminMVC modelFormMVC) {
+		logger.debug("init");
 		managerMVC.getModelManager().getAdminMode().addListener(new adminModeListener());
 		this.managerMVC = managerMVC;
-		this.modelFormMVC = modelFormMVC; 
 		this.applicationView = managerMVC.getApplicationView();
-		this.modelToSave = managerMVC.getModelToSave();
 	}
 
 	public void displayPanel(Eview view ){
@@ -65,7 +61,7 @@ public class ControllerAdminMVC   {
 
 	public void buildForm(){
 		optionPanel = new NodeDetailJscrollPane(this);
-		SwingWorker sw = new SwingWorker(){
+		SwingWorker<Object, Object> sw = new SwingWorker<Object, Object>(){
 			@Override
 			protected Object doInBackground() throws Exception {
 				adminPanel = new AdminSplitPane(managerMVC);

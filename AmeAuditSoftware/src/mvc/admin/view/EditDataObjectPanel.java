@@ -19,6 +19,11 @@ import data.Query;
 
 public class EditDataObjectPanel extends JPanel implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger logger = Logger.getLogger(EditDataObjectPanel.class);
 	
 	private DataObject dataObject;
@@ -30,6 +35,7 @@ public class EditDataObjectPanel extends JPanel implements ActionListener {
 	
 	public EditDataObjectPanel(ControllerAdminMVC controllerAdminMVC, DataObject dataObject) {
 		super(new FlowLayout(FlowLayout.LEFT));
+		logger.debug("init");
 		this.controllerAdminMVC = controllerAdminMVC;
 		this.dataObject= dataObject;
 		if(dataObject!=null){

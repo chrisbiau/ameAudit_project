@@ -4,10 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import mvc.admin.controller.ControllerAdminMVC;
@@ -21,20 +19,21 @@ import data.Query;
 
 public class CreateDataObjectPanel extends JPanel implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger logger = Logger.getLogger(CreateDataObjectPanel.class);
-	private final  DataObjectTypeEnum typeDataObject ;
 	private JButton btnSave;
-	private HashMap<String, JComponent> mapPane ;
 	private final ControllerAdminMVC controllerAdminMVC;
-	private final Query queryObject;
 
 	private UtilBuildViewAdmin utilPanelAdmin;
 
 	public CreateDataObjectPanel(ControllerAdminMVC controllerAdminMVC, DataObjectTypeEnum typeDataObject, Query queryObject) {
 		super(new FlowLayout(FlowLayout.LEFT));
-		this.queryObject   = queryObject;
+		logger.debug("init");
 		this.controllerAdminMVC = controllerAdminMVC;
-		this.typeDataObject = typeDataObject;
+
 		if(typeDataObject!=null){
 			this.utilPanelAdmin = new UtilBuildViewAdmin(typeDataObject);
 			if(queryObject != null){

@@ -15,6 +15,12 @@ import data.Query;
 
 public class BddComponentTree extends JTree {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	public BddComponentTree(){
 		super();
 		

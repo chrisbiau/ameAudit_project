@@ -4,14 +4,11 @@ import mvc.ManagerMVC;
 
 import org.apache.log4j.Logger;
 
-import dao.service.ServiceDAO;
-
 public class ModelAdminMVC {
 
 
 	private static Logger logger = Logger.getLogger(ModelAdminMVC.class);
 	protected String logNameModel;
-	private final ServiceDAO serviceDAO;
 
 	//DataModel
 
@@ -20,8 +17,8 @@ public class ModelAdminMVC {
 	 * @param daoController
 	 */
 	public ModelAdminMVC(String logNameModel, ManagerMVC managerMVC) {
+		logger.debug("init");
 		this.logNameModel = logNameModel;
-		this.serviceDAO = managerMVC.getServiceDAO();
 	}
 
 }
