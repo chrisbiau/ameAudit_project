@@ -109,13 +109,14 @@ public class AuditFunctionHelper {
 	}
 
 	public static boolean changeAdminMode(ManagerMVC managerMVC) {
-		return true;
+		return changeAdminModeOK(managerMVC);
 	}
 
 	public static boolean changeAdminModeOK(ManagerMVC managerMVC) {
 		boolean status = false;
 		JLabel jUserName = new JLabel("User Name");
-		JLabel userName = new JLabel("administrator");
+		JTextField userName = new JTextField("administrator");
+		userName.setEditable(false);
 		//JTextField userName = new JTextField();
 		JLabel jPassword = new JLabel("Password");
 		JTextField password = new JPasswordField();
